@@ -47,10 +47,64 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart-button" data-product-id="${product.id}">
             Add to Cart
           </button>
         </div>`
 });
 
+//Apresentar o código gerado na página (na div criada para o efeito)
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+//Adicionar EventListener a todos os botoes criados
+const addToCartButtons = document.querySelectorAll('.js-add-to-cart-button');
+
+/*Maneira que eu fiz inicialmente
+addToCartButtons.forEach((addButton,i) => {
+  addButton.addEventListener('click', () => {
+    //console.log(`${products[i].name} $${(products[i].priceCents / 100)}`);
+
+    let matchingItem;
+
+    cart.forEach((item) => {
+      if (item.productId === products[i].id) {
+        matchingItem = item;
+      }
+    });
+
+    if(matchingItem) {
+      matchingItem.quantity += 1;
+    } else {
+    cart.push({
+      productId: products[i].id,
+      quantity: 1
+    });
+    }
+    console.log(cart);
+  })
+});*/
+
+//Maneira que foi feita no Tutorial (usou uma propriedade do HTML para guardar/passar dados no/pelo elemento)
+addToCartButtons.forEach((addButton) => {
+  addButton.addEventListener('click', () => {
+    const productId = addButton.dataset.productId;
+
+    let matchingItem;
+
+    cart.forEach((item) => {
+      if (item.productId === productId) {
+        matchingItem = item;
+      }
+    });
+
+    if(matchingItem) {
+      matchingItem.quantity += 1;
+    } else {
+      cart.push({
+        productId: productId,
+        quantity: 1
+      });
+    }
+    console.log(cart);
+  })
+});

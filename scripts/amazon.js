@@ -1,3 +1,6 @@
+import {cart, addToCart} from '../data/cart.js';
+import {products} from '../data/products.js'
+
 let productsHTML = '';
 
 products.forEach((product) => {
@@ -94,56 +97,40 @@ addToCartButtons.forEach((addButton) => {
   //const productId = addButton.dataset.productId;
     const {productId} = addButton.dataset; //(como a variavel tem o mesmo nome do atributo pode-se usar o atalho)
 
-    let matchingItem;
-
-    //Verificar se o item adicionado já existe no carrinho
-    cart.forEach((item) => {
-      if (item.productId === productId) {
-        matchingItem = item;
-      }
-    });
-
-    //Ir buscar a quantidade selecionada no botao respetivo de select
-    const quantidadeSelect = Number(document.querySelector(`.js-select-quantity-${productId}`).value);
-
-    //Se já existir o item, aumentar a sua quantidade, se não existir, adicionar o item novo ao carrinho
-    if(matchingItem) {
-      matchingItem.quantity += quantidadeSelect;
-    } else {
-      cart.push({
-        productId: productId, //quando tem o mesmo nome pode omitir-se a definição, ficando apenas productId
-        quantity: quantidadeSelect //se for nomes diferentes tem de se colocar
-      });
-    }
-
-    let cartQuantity = 0;
-
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;  
-    });
-    
-    //Mostrar a mensage de Added depois de adicionar ao carrinho
-    document.querySelector(`.js-added-to-cart-${productId}`).classList.add('added-to-cart-show');
-
-    // Check if there's a previous timeout for this
-    // product. If there is, we should stop it.
-    const previousTimeoutId = addedMessageTimeouts[productId];
-    if (previousTimeoutId) {
-      clearTimeout(previousTimeoutId);
-    }
-
-    //Se nao existir nenhum timeout previo, iniciamos agora um
-    const timeOutId = setTimeout(() => {
-      document.querySelector(`.js-added-to-cart-${productId}`).classList.remove('added-to-cart-show');
-    }, 2000);
-
-    // Save the timeoutId for this product
-    // so we can stop it later if we need to.
-    addedMessageTimeouts[productId] = timeOutId;
-    
-    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-
-    console.log(cartQuantity);
-    console.log(cart);
+    addToCart(productId);
+    updateCartQuantity(productId);
   })
 });
+
+//Função para atualizar o carrinho, 
+function updateCartQuantity(productId) {
+  let cartQuantity = 0;
+
+  cart.forEach((item) => {
+    cartQuantity += item.quantity;  
+  });
+  
+  //Mostrar a mensage de Added depois de adicionar ao carrinho
+  document.querySelector(`.js-added-to-cart-${productId}`).classList.add('added-to-cart-show');
+
+  // Check if there's a previous timeout for this
+  // product. If there is, we should stop it.
+  const previousTimeoutId = addedMessageTimeouts[productId];
+  if (previousTimeoutId) {
+    clearTimeout(previousTimeoutId);
+  }
+
+  //Se nao existir nenhum timeout previo, iniciamos agora um
+  const timeOutId = setTimeout(() => {
+    document.querySelector(`.js-added-to-cart-${productId}`).classList.remove('added-to-cart-show');
+  }, 2000);
+
+  // Save the timeoutId for this product
+  // so we can stop it later if we need to.
+  addedMessageTimeouts[productId] = timeOutId;
+  
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+
+  console.log(cartQuantity);
+  console.log(cart);
+}

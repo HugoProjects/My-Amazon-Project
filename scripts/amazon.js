@@ -88,7 +88,8 @@ addToCartButtons.forEach((addButton,i) => {
 addToCartButtons.forEach((addButton) => {
   addButton.addEventListener('click', () => {
     
-    const productId = addButton.dataset.productId;
+  //const productId = addButton.dataset.productId;
+    const {productId} = addButton.dataset; //(como a variavel tem o mesmo nome do atributo pode-se usar o atalho)
 
     let matchingItem;
 
@@ -107,8 +108,8 @@ addToCartButtons.forEach((addButton) => {
       matchingItem.quantity += quantidadeSelect;
     } else {
       cart.push({
-        productId: productId,
-        quantity: quantidadeSelect
+        productId: productId, //quando tem o mesmo nome pode omitir-se a definição, ficando apenas productId
+        quantity: quantidadeSelect //se for nomes diferentes tem de se colocar
       });
     }
 

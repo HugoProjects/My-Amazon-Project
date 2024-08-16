@@ -1,5 +1,21 @@
 const products = [
   {
+    id: "111-aaa",
+    image: "images/products/NirT.png",
+    name: "NirT Special Edition Shirt",
+    rating: {
+      stars: 5,
+      count: 250
+    },
+    priceCents: 2495,
+    keywords: [
+      "tshirts",
+      "fashion",
+      "apparel",
+      "summer",
+    ]
+  },
+  {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
     name: "Black and Gray Athletic Cotton Socks - 6 Pairs",

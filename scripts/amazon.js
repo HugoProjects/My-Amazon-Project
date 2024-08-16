@@ -42,7 +42,7 @@ products.forEach((product) => {
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart js-added-to-cart-${product.id}">
             <img src="images/icons/checkmark.png">
             Added
           </div>
@@ -84,6 +84,9 @@ addToCartButtons.forEach((addButton,i) => {
   })
 });*/
 
+//Inicializar os timeOuts antes dos eventos dos butões
+const addedMessageTimeouts = []; //É um array (ou objeto) porque cada butao tem o seu timeout, podem ocorrer vários ao mesmo tempo
+
 //Maneira que foi feita no Tutorial (usou uma propriedade do HTML para guardar/passar dados no/pelo elemento)
 addToCartButtons.forEach((addButton) => {
   addButton.addEventListener('click', () => {
@@ -118,6 +121,25 @@ addToCartButtons.forEach((addButton) => {
     cart.forEach((item) => {
       cartQuantity += item.quantity;  
     });
+    
+    //Mostrar a mensage de Added depois de adicionar ao carrinho
+    document.querySelector(`.js-added-to-cart-${productId}`).classList.add('added-to-cart-show');
+
+    // Check if there's a previous timeout for this
+    // product. If there is, we should stop it.
+    const previousTimeoutId = addedMessageTimeouts[productId];
+    if (previousTimeoutId) {
+      clearTimeout(previousTimeoutId);
+    }
+
+    //Se nao existir nenhum timeout previo, iniciamos agora um
+    const timeOutId = setTimeout(() => {
+      document.querySelector(`.js-added-to-cart-${productId}`).classList.remove('added-to-cart-show');
+    }, 2000);
+
+    // Save the timeoutId for this product
+    // so we can stop it later if we need to.
+    addedMessageTimeouts[productId] = timeOutId;
     
     document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
 

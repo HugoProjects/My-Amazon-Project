@@ -26,7 +26,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class="js-select-quantity-${product.id}">
               <option selected value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -87,22 +87,28 @@ addToCartButtons.forEach((addButton,i) => {
 //Maneira que foi feita no Tutorial (usou uma propriedade do HTML para guardar/passar dados no/pelo elemento)
 addToCartButtons.forEach((addButton) => {
   addButton.addEventListener('click', () => {
+    
     const productId = addButton.dataset.productId;
 
     let matchingItem;
 
+    //Verificar se o item adicionado já existe no carrinho
     cart.forEach((item) => {
       if (item.productId === productId) {
         matchingItem = item;
       }
     });
 
+    //Ir buscar a quantidade selecionada no botao respetivo de select
+    const quantidadeSelect = Number(document.querySelector(`.js-select-quantity-${productId}`).value);
+
+    //Se já existir o item, aumentar a sua quantidade, se não existir, adicionar o item novo ao carrinho
     if(matchingItem) {
-      matchingItem.quantity += 1;
+      matchingItem.quantity += quantidadeSelect;
     } else {
       cart.push({
         productId: productId,
-        quantity: 1
+        quantity: quantidadeSelect
       });
     }
 

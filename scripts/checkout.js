@@ -4,8 +4,6 @@ import {moneyConverter} from './utils/money.js';
 
 let cartHTML = '';
 
-console.log(cart);
-
 cart.forEach((cartItem) => {
 
   const productId = cartItem.id;
@@ -101,11 +99,24 @@ document.querySelector('.js-order-summary').innerHTML = cartHTML;
 document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click', () => {
     const productId = link.dataset.productId;
-    removeFromCart(productId)
+    removeFromCart(productId);
 
     const container = document.querySelector(`.js-cart-item-container-${productId}`);
     container.remove();
+
+    calculateCartQuantity();
   })
 });
 
+//Função para calcular a quantidade do carrinho e mostrar em cima no checkout o total de items
+function calculateCartQuantity() {
+  let cartQuantity = 0;
 
+  cart.forEach((item) => {
+    cartQuantity += item.quantity;  
+  });
+
+document.querySelector('.js-return-to-home-link').innerHTML = `${cartQuantity} items`;
+}
+
+calculateCartQuantity();

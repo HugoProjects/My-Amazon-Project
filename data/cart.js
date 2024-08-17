@@ -47,3 +47,17 @@ export function removeFromCart(productId){
 function saveCartToStorage() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
+
+/*Mostrar carrinho HTML //Para ser usada esta função teria de alterar algumas coisas então preferi deixar copias da mesma nos varios scripts
+export function showCartQuantity (){
+  let cartQuantity = 0;
+
+  cart.forEach((item) => {
+    cartQuantity += item.quantity;  
+  });
+  if(cartQuantity === 0){
+    document.querySelector('.js-cart-quantity').innerHTML = '';
+  } else {
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+  }
+}*/

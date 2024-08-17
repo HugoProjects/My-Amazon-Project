@@ -105,12 +105,7 @@ addToCartButtons.forEach((addButton) => {
 
 //Função para atualizar o carrinho, 
 function updateCartQuantity(productId) {
-  let cartQuantity = 0;
 
-  cart.forEach((item) => {
-    cartQuantity += item.quantity;  
-  });
-  
   //Mostrar a mensage de Added depois de adicionar ao carrinho
   document.querySelector(`.js-added-to-cart-${productId}`).classList.add('added-to-cart-show');
 
@@ -130,8 +125,21 @@ function updateCartQuantity(productId) {
   // so we can stop it later if we need to.
   addedMessageTimeouts[productId] = timeOutId;
   
-  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-
-  console.log(cartQuantity);
-  console.log(cart);
+  showCartQuantity();
 }
+
+//Mostrar carrinho HTML //Esta função poderia ser modificada para ser partilhada pelos vários scripts (armazenando a mesma no cart.js e exportando)
+function showCartQuantity (){
+  let cartQuantity = 0;
+
+  cart.forEach((item) => {
+    cartQuantity += item.quantity;  
+  });
+  if(cartQuantity === 0){
+    document.querySelector('.js-cart-quantity').innerHTML = '';
+  } else {
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+  }
+}
+
+showCartQuantity();

@@ -99,12 +99,12 @@ addToCartButtons.forEach((addButton) => {
     const {productId} = addButton.dataset; //(como a variavel tem o mesmo nome do atributo pode-se usar o atalho)
 
     addToCart(productId);
-    updateCartQuantity(productId);
+    addCartQuantity(productId);
   })
 });
 
 //Função para atualizar o carrinho, 
-function updateCartQuantity(productId) {
+function addCartQuantity(productId) {
 
   //Mostrar a mensage de Added depois de adicionar ao carrinho
   document.querySelector(`.js-added-to-cart-${productId}`).classList.add('added-to-cart-show');

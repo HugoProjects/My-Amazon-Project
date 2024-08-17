@@ -1,4 +1,4 @@
-import {cart, addToCart, removeFromCart} from '../data/cart.js';
+import {cart, addToCart, removeFromCart, updateCartQuantity} from '../data/cart.js';
 import {products} from '../data/products.js'
 import {moneyConverter} from './utils/money.js';
 
@@ -34,11 +34,13 @@ cart.forEach((cartItem) => {
         </div>
         <div class="product-quantity">
           <span>
-            Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+            Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
           </span>
-          <span class="update-quantity-link link-primary">
+          <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id=${matchingProduct.id}>
             Update
           </span>
+          <input class="quantity-input js-quantity-enter js-quantity-input-${productId}" data-product-id=${matchingProduct.id}>
+          <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id=${matchingProduct.id}>Save</span>
           <span class="delete-quantity-link link-primary js-delete-link" data-product-id=${matchingProduct.id}>
             Delete
           </span>
@@ -95,6 +97,8 @@ cart.forEach((cartItem) => {
 
 document.querySelector('.js-order-summary').innerHTML = cartHTML;
 
+calculateCartQuantity(); //Calcular e mostrar a quantidade de items no topo da pagina
+
 //Adicionar EventListeners aos botoes Delete para remover produto do carrinho
 document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click', () => {
@@ -108,6 +112,54 @@ document.querySelectorAll('.js-delete-link').forEach((link) => {
   })
 });
 
+//Adicionar EventListeners aos botoes Update para atualizar produtos do carrinho
+document.querySelectorAll('.js-update-quantity-link').forEach((link) => {
+  link.addEventListener('click', () => {
+    const productId = link.dataset.productId;
+
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    container.classList.add('is-editing-quantity');
+  })
+});
+
+//Adicionar EventListeners aos botoes Save para guardar novas quantidades de produtos no carrinho
+document.querySelectorAll('.js-save-quantity-link').forEach((link) => {
+  link.addEventListener('click', () => {
+    const productId = link.dataset.productId;
+
+    saveNewQuantity(productId);
+  })
+});
+
+//Adicionar EventListeners ao boto ENTER para dar Save e guardar novas quantidades de produtos no carrinho
+document.querySelectorAll('.js-quantity-enter').forEach((input) => {
+  input.addEventListener('keypress', (event) => {
+    const productId = input.dataset.productId;
+
+    if(event.key === "Enter") {
+      saveNewQuantity(productId);
+    }
+  })
+});
+
+function saveNewQuantity(productId){
+  const container = document.querySelector(`.js-cart-item-container-${productId}`);
+  container.classList.remove('is-editing-quantity');
+  
+  const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
+
+  updateCartQuantity(productId, newQuantity);
+
+  //Se selecionar quantidade 0, fazer desaparecer o item do carro, outra quantidade simplesmente atualiza
+  if(newQuantity === 0){
+    removeFromCart(productId);
+    document.querySelector(`.js-cart-item-container-${productId}`).remove();
+  } else {
+    document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;
+  }
+  calculateCartQuantity();
+}
+
 //Função para calcular a quantidade do carrinho e mostrar em cima no checkout o total de items
 function calculateCartQuantity() {
   let cartQuantity = 0;
@@ -119,4 +171,3 @@ function calculateCartQuantity() {
 document.querySelector('.js-return-to-home-link').innerHTML = `${cartQuantity} items`;
 }
 
-calculateCartQuantity();

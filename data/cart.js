@@ -61,3 +61,14 @@ export function showCartQuantity (){
     document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
   }
 }*/
+
+//Função para atualizar a quantidade no carrinho depois de editar as quantidades no checkout
+export function updateCartQuantity(productId, newQuantity) {
+  
+  cart.forEach((cartItem) => {
+    if (cartItem.id === productId) {
+      cartItem.quantity = newQuantity;
+    }
+  });
+  saveCartToStorage();
+}

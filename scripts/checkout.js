@@ -1,6 +1,8 @@
 import {cart, addToCart, removeFromCart, updateCartQuantity} from '../data/cart.js';
 import {products} from '../data/products.js'
-import {moneyConverter} from './utils/money.js';
+import moneyConverter from './utils/money.js'; //Usei um export default portanto nao precisa das {}
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
+import {deliveryOptions} from '../data/deliveryOptions.js'
 
 let cartHTML = '';
 

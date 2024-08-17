@@ -24,7 +24,8 @@ export function addToCart(productId){
   } else {
     cart.push({
       id: productId, //quando tem o mesmo nome pode omitir-se a definição, ficando apenas productId
-      quantity: quantidadeSelect //se for nomes diferentes tem de se colocar
+      quantity: quantidadeSelect, //se for nomes diferentes tem de se colocar
+      deliveryOptionId: '1'
     });
   }
   saveCartToStorage();

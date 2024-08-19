@@ -1,4 +1,15 @@
+import {deliveryOptions} from "./deliveryOptions.js";
+
 export let cart = JSON.parse(localStorage.getItem('cart'));
+
+/*Carrinho de compras (Modelo)
+cart[
+  {
+    id: 'qwr135adqwr'
+    quantity: 2
+    deliveryOption: 1
+  }
+]*/
 
 if (!cart) {
   cart = [];

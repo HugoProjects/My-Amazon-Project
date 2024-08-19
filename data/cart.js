@@ -7,7 +7,7 @@ cart[
   {
     id: 'qwr135adqwr'
     quantity: 2
-    deliveryOption: 1
+    deliveryOptionId: 1
   }
 ]*/
 
@@ -15,7 +15,7 @@ if (!cart) {
   cart = [];
 }
 
-//Adicionei 2 items ao carrinho para testar o checkout sempre com items presentes
+//Adicionar item ao carrinho
 export function addToCart(productId){
   let matchingItem;
 

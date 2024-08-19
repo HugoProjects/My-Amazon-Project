@@ -18,10 +18,26 @@ cart.forEach((cartItem) => {
     }
   });
 
+  //Associar a data de entrega (que é mostrada no resumo do carrinho) com a opção de entrega escolhida no menu das opçoes de entrega
+  const deliveryOptionId = cartItem.deliveryOptionId;
+
+  let deliveryOption;
+
+  deliveryOptions.forEach((option) => {
+    if(option.id === deliveryOptionId) {
+      deliveryOption = option;
+    }
+  });
+
+  const today = dayjs();
+  const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
+  const dateString = deliveryDate.format('dddd, MMMM D');
+  
+  //Gerar o HTML para apresentar o resumo do carrinho
   cartHTML += `
   <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
     <div class="delivery-date">
-      Delivery date: Tuesday, June 21
+      Delivery date: ${dateString}
     </div>
     <div class="cart-item-details-grid">
       <img class="product-image"
@@ -53,7 +69,7 @@ cart.forEach((cartItem) => {
         <div class="delivery-options-title">
           Choose a delivery option:
         </div>
-        ${deliveryOptionsHTML(matchingProduct)}
+        ${deliveryOptionsHTML(matchingProduct, cartItem)}
       </div>
 
     </div>
@@ -62,10 +78,10 @@ cart.forEach((cartItem) => {
 
 document.querySelector('.js-order-summary').innerHTML = cartHTML;
 
-calculateCartQuantity(); //Calcular e mostrar a quantidade de items no topo da pagina
+onTopCartQuantity(); //Calcular e mostrar a quantidade de items no topo da pagina
 
 //Gerar o HTML das 3 opções de Delivery
-function deliveryOptionsHTML(matchingProduct){
+function deliveryOptionsHTML(matchingProduct, cartItem){
 
   let deliveryOptionsHTML = '';
 
@@ -76,9 +92,12 @@ function deliveryOptionsHTML(matchingProduct){
 
     const priceString = option.priceCents === 0 ? 'FREE' : `$${moneyConverter(option.priceCents)}`;
 
+    const isChecked = option.id === cartItem.deliveryOptionId; //Guarda true or false conforme a opção delivery de cada item no carrinho
+    
     deliveryOptionsHTML += `
     <div class="delivery-option">
-      <input type="radio" checked
+      <input type="radio"
+        ${isChecked ? 'checked' : ''}
         class="delivery-option-input"
         name="delivery-option-${matchingProduct.id}">
       <div>
@@ -99,12 +118,14 @@ function deliveryOptionsHTML(matchingProduct){
 document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click', () => {
     const productId = link.dataset.productId;
+
     removeFromCart(productId);
 
     const container = document.querySelector(`.js-cart-item-container-${productId}`);
+
     container.remove();
 
-    calculateCartQuantity();
+    onTopCartQuantity();
   })
 });
 
@@ -127,7 +148,7 @@ document.querySelectorAll('.js-save-quantity-link').forEach((link) => {
   })
 });
 
-//Adicionar EventListeners ao boto ENTER para dar Save e guardar novas quantidades de produtos no carrinho
+//Adicionar EventListeners ao botao ENTER para dar Save e guardar novas quantidades de produtos no carrinho
 document.querySelectorAll('.js-quantity-enter').forEach((input) => {
   input.addEventListener('keypress', (event) => {
     const productId = input.dataset.productId;
@@ -138,13 +159,14 @@ document.querySelectorAll('.js-quantity-enter').forEach((input) => {
   })
 });
 
+//Função para guardar a quantidade de um produto (escolhida/alterada no checkout)
 function saveNewQuantity(productId){
   const container = document.querySelector(`.js-cart-item-container-${productId}`);
   container.classList.remove('is-editing-quantity');
   
   const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
 
-  updateCartQuantity(productId, newQuantity);
+  updateCartQuantity(productId, newQuantity); //Atualizar a quantidade no carrinho
 
   //Se selecionar quantidade 0, fazer desaparecer o item do carro, outra quantidade simplesmente atualiza
   if(newQuantity === 0){
@@ -153,11 +175,11 @@ function saveNewQuantity(productId){
   } else {
     document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;
   }
-  calculateCartQuantity();
+  onTopCartQuantity();
 }
 
 //Função para calcular a quantidade do carrinho e mostrar em cima no checkout o total de items
-function calculateCartQuantity() {
+function onTopCartQuantity() {
   let cartQuantity = 0;
 
   cart.forEach((item) => {

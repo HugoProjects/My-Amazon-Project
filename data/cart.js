@@ -84,3 +84,19 @@ export function updateCartQuantity(productId, newQuantity) {
   });
   saveCartToStorage();
 }
+
+//Função para atualizar a opção de entrega escolhido pelo utilizador
+export function updateDeliveryOption(productId, deliveryOptionId) {
+  let matchingItem;
+
+  //Verificar se o item adicionado já existe no carrinho
+  cart.forEach((item) => {
+    if (item.id === productId) {
+      matchingItem = item;
+    }
+  });
+
+  matchingItem.deliveryOptionId = deliveryOptionId;
+
+  saveCartToStorage();
+}

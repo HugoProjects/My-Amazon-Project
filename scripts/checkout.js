@@ -1,4 +1,4 @@
-import {cart, addToCart, removeFromCart, updateCartQuantity} from '../data/cart.js';
+import {cart, addToCart, removeFromCart, updateCartQuantity, updateDeliveryOption} from '../data/cart.js';
 import {products} from '../data/products.js';
 import moneyConverter from './utils/money.js'; //Usei um export default portanto nao precisa das {}
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
@@ -80,40 +80,6 @@ document.querySelector('.js-order-summary').innerHTML = cartHTML;
 
 onTopCartQuantity(); //Calcular e mostrar a quantidade de items no topo da pagina
 
-//Gerar o HTML das 3 opções de Delivery
-function deliveryOptionsHTML(matchingProduct, cartItem){
-
-  let deliveryOptionsHTML = '';
-
-  deliveryOptions.forEach((option) => {
-    const today = dayjs();
-    const deliveryDate = today.add(option.deliveryDays, 'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
-
-    const priceString = option.priceCents === 0 ? 'FREE' : `$${moneyConverter(option.priceCents)}`;
-
-    const isChecked = option.id === cartItem.deliveryOptionId; //Guarda true or false conforme a opção delivery de cada item no carrinho
-    
-    deliveryOptionsHTML += `
-    <div class="delivery-option">
-      <input type="radio"
-        ${isChecked ? 'checked' : ''}
-        class="delivery-option-input"
-        name="delivery-option-${matchingProduct.id}">
-      <div>
-        <div class="delivery-option-date">
-          ${dateString}
-        </div>
-        <div class="delivery-option-price">
-          ${priceString} - Shipping
-        </div>
-      </div>
-    </div>
-    `;
-  });
-  return deliveryOptionsHTML;
-}
-
 //Adicionar EventListeners aos botoes Delete para remover produto do carrinho
 document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click', () => {
@@ -159,6 +125,57 @@ document.querySelectorAll('.js-quantity-enter').forEach((input) => {
   })
 });
 
+//Adicionar EventListeners aos botões INPUT para selecionar a delivery option
+document.querySelectorAll('.js-delivery-option').forEach((inputElement) => {
+  inputElement.addEventListener('click', () => {
+    
+    //const productId = inputElement.dataset.productId;
+    //const deliveryOptionId = inputElement.dataset.deliveryOptionId;
+    //Em baixo fica o atalho para criar as duas variaveis de cima
+    const {productId, deliveryOptionId} = inputElement.dataset;
+
+    updateDeliveryOption(productId, deliveryOptionId);
+    
+
+  })
+})
+
+// ----- FUNCTIONS ----- \\
+
+//Gerar o HTML das 3 opções de Delivery
+function deliveryOptionsHTML(matchingProduct, cartItem){
+
+  let deliveryOptionsHTML = '';
+
+  deliveryOptions.forEach((option) => {
+    const today = dayjs();
+    const deliveryDate = today.add(option.deliveryDays, 'days');
+    const dateString = deliveryDate.format('dddd, MMMM D');
+
+    const priceString = option.priceCents === 0 ? 'FREE' : `$${moneyConverter(option.priceCents)}`;
+
+    const isChecked = option.id === cartItem.deliveryOptionId; //Guarda true or false conforme a opção delivery de cada item no carrinho
+    
+    deliveryOptionsHTML += `
+    <div class="delivery-option js-delivery-option" data-product-id="${matchingProduct.id}" data-delivery-option-id="${option.id}">
+      <input type="radio"
+        ${isChecked ? 'checked' : ''}
+        class="delivery-option-input"
+        name="delivery-option-${matchingProduct.id}">
+      <div>
+        <div class="delivery-option-date">
+          ${dateString}
+        </div>
+        <div class="delivery-option-price">
+          ${priceString} - Shipping
+        </div>
+      </div>
+    </div>
+    `;
+  });
+  return deliveryOptionsHTML;
+}
+
 //Função para guardar a quantidade de um produto (escolhida/alterada no checkout)
 function saveNewQuantity(productId){
   const container = document.querySelector(`.js-cart-item-container-${productId}`);
@@ -188,4 +205,3 @@ function onTopCartQuantity() {
 
 document.querySelector('.js-return-to-home-link').innerHTML = `${cartQuantity} items`;
 }
-

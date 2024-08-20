@@ -1,8 +1,9 @@
 import {cart, removeFromCart, updateCartQuantity, updateDeliveryOption} from '../../data/cart.js';
-import {products} from '../../data/products.js';
+import {products, getProduct} from '../../data/products.js';
 import moneyConverter from '../utils/money.js'; //Usei um export default portanto nao precisa das {}
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
-import {deliveryOptions} from '../../data/deliveryOptions.js';
+import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOptions.js';
+import {renderPaymentSummary} from './paymentSummary.js';
 
 //Colocar todo o código dentro de uma função para chamar a função sempre que quiser dar update/refresh na página, basicamente, volto a desenhar tudo novamente mas com os novos dados (depois de os mudar e guardar), a página é desenhada novamente com os novos dados, em vez de mudar elemento a elemento
 export function renderOrderSummary(){
@@ -12,24 +13,14 @@ export function renderOrderSummary(){
 
     const productId = cartItem.id;
 
-    let matchingProduct;
-
-    products.forEach((product) => {
-      if(product.id === productId) {
-        matchingProduct = product;
-      }
-    });
+    //Função (exportada) para saber qual o produto correto (para ter acesso aos dados do mesmo)
+    const matchingProduct = getProduct(productId);
 
     //Associar a data de entrega (que é mostrada no resumo do carrinho) com a opção de entrega escolhida no menu das opçoes de entrega
     const deliveryOptionId = cartItem.deliveryOptionId;
 
-    let deliveryOption;
-
-    deliveryOptions.forEach((option) => {
-      if(option.id === deliveryOptionId) {
-        deliveryOption = option;
-      }
-    });
+    //Função (exportada) para saber qual a opção de entrega correta (para ter acesso aos dados da mesma)
+    const deliveryOption = getDeliveryOption(deliveryOptionId);
 
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
@@ -94,6 +85,8 @@ export function renderOrderSummary(){
       container.remove();
 
       onTopCartQuantity();
+
+      renderPaymentSummary();
     })
   });
 
@@ -113,6 +106,7 @@ export function renderOrderSummary(){
       const productId = link.dataset.productId;
 
       saveNewQuantity(productId);
+      renderPaymentSummary();
     })
   });
 
@@ -123,6 +117,7 @@ export function renderOrderSummary(){
 
       if(event.key === "Enter") {
         saveNewQuantity(productId);
+        renderPaymentSummary();
       }
     })
   });
@@ -138,7 +133,7 @@ export function renderOrderSummary(){
 
       updateDeliveryOption(productId, deliveryOptionId);
       renderOrderSummary(); //Volta a desenhar a página inteira com os novos dados (podia ter feito isto para atualizar todas as mudanças no HTML, em vez de mudar elemento a elemento, desenha-se tudo mas com os novos dados)
-
+      renderPaymentSummary();
     })
   })
 

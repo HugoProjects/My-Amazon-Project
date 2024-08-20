@@ -1,8 +1,7 @@
 import {cart, removeFromCart, updateCartQuantity, updateDeliveryOption, totalCartQuantity} from '../../data/cart.js';
 import {products, getProduct} from '../../data/products.js';
 import moneyConverter from '../utils/money.js'; //Usei um export default portanto nao precisa das {}
-import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
-import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOptions.js';
+import {deliveryOptions, getDeliveryOption, calculateDeliveryDate} from '../../data/deliveryOptions.js';
 import {renderPaymentSummary} from './paymentSummary.js';
 import {renderCheckoutHeader} from './checkoutHeader.js';
 
@@ -23,9 +22,7 @@ export function renderOrderSummary(){
     //Função (exportada) para saber qual a opção de entrega correta (para ter acesso aos dados da mesma)
     const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
+    const dateString = calculateDeliveryDate(deliveryOption);
     
     //Gerar o HTML para apresentar o resumo do carrinho
     cartHTML += `
@@ -148,9 +145,7 @@ export function renderOrderSummary(){
     let deliveryOptionsHTML = '';
 
     deliveryOptions.forEach((option) => {
-      const today = dayjs();
-      const deliveryDate = today.add(option.deliveryDays, 'days');
-      const dateString = deliveryDate.format('dddd, MMMM D');
+      const dateString = calculateDeliveryDate(option);
 
       const priceString = option.priceCents === 0 ? 'FREE' : `$${moneyConverter(option.priceCents)}`;
 

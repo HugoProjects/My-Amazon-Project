@@ -100,3 +100,13 @@ export function updateDeliveryOption(productId, deliveryOptionId) {
 
   saveCartToStorage();
 }
+
+//Função para calcular a quantidade total de items no cart
+export function totalCartQuantity() {
+  let cartQuantity = 0;
+
+  cart.forEach((item) => {
+    cartQuantity += item.quantity;  
+  });
+  return cartQuantity;
+}

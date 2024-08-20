@@ -1,9 +1,10 @@
-import {cart, removeFromCart, updateCartQuantity, updateDeliveryOption} from '../../data/cart.js';
+import {cart, removeFromCart, updateCartQuantity, updateDeliveryOption, totalCartQuantity} from '../../data/cart.js';
 import {products, getProduct} from '../../data/products.js';
 import moneyConverter from '../utils/money.js'; //Usei um export default portanto nao precisa das {}
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
 import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOptions.js';
 import {renderPaymentSummary} from './paymentSummary.js';
+import {renderCheckoutHeader} from './checkoutHeader.js';
 
 //Colocar todo o código dentro de uma função para chamar a função sempre que quiser dar update/refresh na página, basicamente, volto a desenhar tudo novamente mas com os novos dados (depois de os mudar e guardar), a página é desenhada novamente com os novos dados, em vez de mudar elemento a elemento
 export function renderOrderSummary(){
@@ -71,7 +72,7 @@ export function renderOrderSummary(){
 
   document.querySelector('.js-order-summary').innerHTML = cartHTML;
 
-  onTopCartQuantity(); //Calcular e mostrar a quantidade de items no topo da pagina
+  renderCheckoutHeader(); //Calcular e mostrar a quantidade de items no topo da pagina
 
   //Adicionar EventListeners aos botoes Delete para remover produto do carrinho
   document.querySelectorAll('.js-delete-link').forEach((link) => {
@@ -80,11 +81,13 @@ export function renderOrderSummary(){
 
       removeFromCart(productId);
 
+      /* Antes de usarmos o MVC editavamos a HTML para atualizar o elemento (agora desenhamos a pagina novamente)
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.remove();*/
 
-      container.remove();
+      renderOrderSummary();
 
-      onTopCartQuantity();
+      renderCheckoutHeader();
 
       renderPaymentSummary();
     })
@@ -185,22 +188,10 @@ export function renderOrderSummary(){
     //Se selecionar quantidade 0, fazer desaparecer o item do carro, outra quantidade simplesmente atualiza
     if(newQuantity === 0){
       removeFromCart(productId);
-      document.querySelector(`.js-cart-item-container-${productId}`).remove();
+      /*document.querySelector(`.js-cart-item-container-${productId}`).remove();*/ renderOrderSummary(); //Aqui pode voltar a usar-se o MVC, mas quando é para mudar apenas 1 elemento há que considerar se vale a pena correr todo o código para desenhar a página ou apenas a linha que muda o elemento, neste caso, talvez mudar apenas o elemento fosse mais eficiente
     } else {
-      document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;
+      /*document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;*/ renderOrderSummary(); //Mesma situação que em cima
     }
-    onTopCartQuantity();
+    renderCheckoutHeader();
   }
-
-  //Função para calcular a quantidade do carrinho e mostrar em cima no checkout o total de items
-  function onTopCartQuantity() {
-    let cartQuantity = 0;
-
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;  
-    });
-
-  document.querySelector('.js-return-to-home-link').innerHTML = `${cartQuantity} items`;
-  }
-
 }

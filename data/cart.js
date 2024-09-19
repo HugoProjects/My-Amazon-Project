@@ -1,18 +1,24 @@
 import {deliveryOptions} from "./deliveryOptions.js";
 
-export let cart = JSON.parse(localStorage.getItem('cart'));
+export let cart;
 
-/*Carrinho de compras (Modelo)
-cart[
-  {
-    id: 'qwr135adqwr'
-    quantity: 2
-    deliveryOptionId: 1
+loadFromStorage(); //Carregar o carrinho da localStorage (ou criar carrinho caso nao haja um)
+
+export function loadFromStorage() {
+  cart = JSON.parse(localStorage.getItem('cart'));
+
+  /*Carrinho de compras (Modelo)
+  cart[
+    {
+      id: 'qwr135adqwr'
+      quantity: 2
+      deliveryOptionId: 1
+    }
+  ]*/
+  
+  if (!cart) {
+    cart = [];
   }
-]*/
-
-if (!cart) {
-  cart = [];
 }
 
 //Adicionar item ao carrinho

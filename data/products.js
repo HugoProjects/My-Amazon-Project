@@ -9,6 +9,7 @@ export function getProduct(productId) {
     return matchingProduct;
 }
 
+/* Array com todos os produtos
 export const products = [
   {
     id: "111-aaa",
@@ -685,3 +686,26 @@ export const products = [
     ]
   }
 ];
+*/
+
+// Vamos "buscar" os produtos a um servidor
+export let products = [];
+
+export function loadProducts(functionToRunAfterLoading) {
+
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response); //Converter a resposta do servidor de JSON para Objetos e guardar no array
+  
+    console.log('Load products.');
+
+    functionToRunAfterLoading();
+  });
+
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+
+  xhr.send();
+}
+
+//loadProducts();

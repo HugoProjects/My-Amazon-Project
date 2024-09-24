@@ -691,6 +691,25 @@ export const products = [
 // Vamos "buscar" os produtos a um servidor
 export let products = [];
 
+//O modo fetch use promises sendo entao uma melhor pratica que o XMLHttpRequest com callbacks
+export function loadProductsFetch(){
+  const promise = fetch(
+    'https://supersimplebackend.dev/products'
+  ).then((response) => {
+    return response.json();
+  }).then((productsData) => {
+    products = productsData;
+    console.log('Load products.');
+  });
+  return promise;
+}
+
+/*Checking if its functional
+loadProductsFetch().then(() => {
+  console.log('next step');
+});*/
+
+//Com callbacks em vez de promises (faz o mesmo que o de cima com o fecth)
 export function loadProducts(functionToRunAfterLoading) {
 
   const xhr = new XMLHttpRequest();

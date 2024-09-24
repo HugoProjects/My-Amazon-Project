@@ -116,3 +116,20 @@ export function totalCartQuantity() {
   });
   return cartQuantity;
 }
+
+//Carregar o carrinho através do servidor de backend
+export function loadCart(functionToRunAfterLoading) {
+
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load', () => {
+
+    console.log(xhr.response);
+
+    functionToRunAfterLoading();
+  });
+
+  xhr.open('GET', 'https://supersimplebackend.dev/cart');
+
+  xhr.send();
+}

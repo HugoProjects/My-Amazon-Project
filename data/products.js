@@ -691,7 +691,7 @@ export const products = [
 // Vamos "buscar" os produtos a um servidor
 export let products = [];
 
-//O modo fetch use promises sendo entao uma melhor pratica que o XMLHttpRequest com callbacks
+//O modo fetch usa promises sendo entao uma melhor pratica que o XMLHttpRequest com callbacks
 export function loadProductsFetch(){
   const promise = fetch(
     'https://supersimplebackend.dev/products'

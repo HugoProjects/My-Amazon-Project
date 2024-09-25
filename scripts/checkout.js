@@ -23,7 +23,7 @@ new Promise((resolve)=> {
   renderPaymentSummary();
 });
 */
-
+/*
 //Esperar pelo conjunto de promessas (que serão executadas simultaneamente) para depois dar render
 Promise.all([
   loadProductsFetch(),
@@ -36,9 +36,9 @@ Promise.all([
   renderOrderSummary();
   renderPaymentSummary();
 });
+*/
 
-
-/*Usar callbacks (é melhor pratica usar promises)
+/*Usar callbacks (não é tao eficiente, é melhor pratica usar promises)
 loadProducts(() => {
 
   loadCart(() => {
@@ -46,3 +46,32 @@ loadProducts(() => {
     renderPaymentSummary();
   });
 });*/
+
+
+//Ainda melhor que usar promises, é usar async e await (que são atalhos das promises)
+async function loadPage(){
+  
+  console.log('load page');
+
+  await loadProductsFetch(); //await so funciona com promises (esta funcao retorna uma promise)
+
+  //Aqui passamos uma promise diretamente
+  await new Promise((resolve) => {
+    loadCart(() => {
+      resolve();
+    });
+  });
+
+  renderOrderSummary();
+  renderPaymentSummary();
+
+  //return 'passar um valor pelo return'; //Opcional
+}
+
+/*Um exemplo se quisessemos executar ainda mais código depois de esperar pelo loadPage
+loadPage().then((value) => {
+  console.log('next step');
+  console.log(value);
+});*/
+
+loadPage();

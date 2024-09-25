@@ -700,6 +700,9 @@ export function loadProductsFetch(){
   }).then((productsData) => {
     products = productsData;
     console.log('Load products.');
+  }).catch((error) => { //Se acontecer um erro durante o fetch
+    console.log('Unexpected Error, try again later...');
+    //Opcionar: pode usar-se o parametro error para obter mais informaçoes sobre o erro que aconteceu
   });
   return promise;
 }
@@ -720,6 +723,10 @@ export function loadProducts(functionToRunAfterLoading) {
     console.log('Load products.');
 
     functionToRunAfterLoading();
+  });
+
+  xhr.addEventListener('error', () => {
+    console.log('Unexpected Error, try again later...');
   });
 
   xhr.open('GET', 'https://supersimplebackend.dev/products');

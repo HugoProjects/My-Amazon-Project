@@ -51,17 +51,22 @@ loadProducts(() => {
 //Ainda melhor que usar promises, é usar async e await (que são atalhos das promises)
 async function loadPage(){
   
-  console.log('load page');
+  try{
 
-  await loadProductsFetch(); //await so funciona com promises (esta funcao retorna uma promise)
+    //throw 'exemplo de erro'; //Isto serve para criar um erro de proposito para o codigo saltar logo para o catch
 
-  //Aqui passamos uma promise diretamente
-  await new Promise((resolve) => {
-    loadCart(() => {
-      resolve();
+    await loadProductsFetch(); //await so funciona com promises (esta funcao retorna uma promise)
+
+    //Aqui passamos uma promise diretamente
+    const value = await new Promise((resolve) => {
+      loadCart(() => {
+        resolve('Se quisermos passar algo pela variavel value');
+      });
     });
-  });
-
+  } catch (error) {
+    console.log('Unexpected Error, try again later...');
+  }
+  
   renderOrderSummary();
   renderPaymentSummary();
 

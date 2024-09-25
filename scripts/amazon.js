@@ -1,8 +1,22 @@
 import {cart, addToCart} from '../data/cart.js';
-import {products, loadProducts} from '../data/products.js'
+import {products, loadProducts, loadProductsFetch} from '../data/products.js'
 import {moneyConverter} from './utils/money.js';
 
-loadProducts(renderProductsGrid);
+//loadProducts(renderProductsGrid); //Usar callbacks
+
+/*Usar Promises
+loadProductsFetch().then(() => {
+  renderProductsGrid();
+});
+*/
+
+loadPage();
+
+//Usar Promises mas com async e await
+async function loadPage(){
+  await loadProductsFetch();
+  renderProductsGrid();
+}
 
 function renderProductsGrid(){
 

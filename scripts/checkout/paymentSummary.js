@@ -10,7 +10,7 @@ export function renderPaymentSummary() {
   let shippingPriceCents = 0;
 
   cart.forEach((cartItem) => {
-    const product = getProduct(cartItem.id);
+    const product = getProduct(cartItem.productId);
     productPriceCents += product.priceCents * cartItem.quantity;
 
     const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
@@ -60,9 +60,10 @@ export function renderPaymentSummary() {
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHTML;
 
   console.log(cart);
+
   document.querySelector('.js-place-order').addEventListener('click', async () => {
     try {
-      const response = await fetch('https://supersimplebackend.dev/orders', {
+      const response = await fetch('http://supersimplebackend.dev/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -80,6 +81,6 @@ export function renderPaymentSummary() {
       console.log("Erro :(");
     }
 
-    window.location.href = 'orders.html';
+    window.location.href = 'orders.html'; //window.location.href devolve o url carregado no momento (neste caso modificamos para outro url)
   });
 }

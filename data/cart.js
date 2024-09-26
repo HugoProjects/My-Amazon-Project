@@ -27,7 +27,7 @@ export function addToCart(productId){
 
   //Verificar se o item adicionado já existe no carrinho
   cart.forEach((item) => {
-    if (item.id === productId) {
+    if (item.productId === productId) {
       matchingItem = item;
     }
   });
@@ -40,7 +40,7 @@ export function addToCart(productId){
     matchingItem.quantity += quantidadeSelect;
   } else {
     cart.push({
-      id: productId, //quando tem o mesmo nome pode omitir-se a definição, ficando apenas productId
+      productId: productId, //quando tem o mesmo nome pode omitir-se a definição, ficando apenas productId
       quantity: quantidadeSelect, //se for nomes diferentes tem de se colocar
       deliveryOptionId: '1'
     });
@@ -53,7 +53,7 @@ export function removeFromCart(productId){
   const newCart = [];
 
   cart.forEach((cartItem) => {
-    if (cartItem.id !== productId){
+    if (cartItem.productId !== productId){
       newCart.push(cartItem);
     }
   });
@@ -84,7 +84,7 @@ export function showCartQuantity (){
 export function updateCartQuantity(productId, newQuantity) {
   
   cart.forEach((cartItem) => {
-    if (cartItem.id === productId) {
+    if (cartItem.productId === productId) {
       cartItem.quantity = newQuantity;
     }
   });
@@ -97,7 +97,7 @@ export function updateDeliveryOption(productId, deliveryOptionId) {
 
   //Verificar se o item adicionado já existe no carrinho
   cart.forEach((item) => {
-    if (item.id === productId) {
+    if (item.productId === productId) {
       matchingItem = item;
     }
   });

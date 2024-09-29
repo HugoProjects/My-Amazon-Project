@@ -1,4 +1,4 @@
-import {cart, addToCart} from '../data/cart.js';
+import {cart, addToCart, showCartQuantity} from '../data/cart.js';
 import {products, loadProducts, loadProductsFetch} from '../data/products.js'
 import {moneyConverter} from './utils/money.js';
 
@@ -146,19 +146,6 @@ function renderProductsGrid(){
     showCartQuantity();
   }
 
-  //Mostrar carrinho HTML //Esta função poderia ser modificada para ser partilhada pelos vários scripts (armazenando a mesma no cart.js e exportando)
-  function showCartQuantity (){
-    let cartQuantity = 0;
-
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;  
-    });
-    if(cartQuantity === 0){
-      document.querySelector('.js-cart-quantity').innerHTML = '';
-    } else {
-      document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-    }
-  }
-
+  //Mostrar o numero de items no carrinho no logo no canto superior direito
   showCartQuantity();
 }

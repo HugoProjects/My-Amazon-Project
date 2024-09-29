@@ -33,7 +33,14 @@ export function addToCart(productId){
   });
 
   //Ir buscar a quantidade selecionada no botao respetivo de select
-  const quantidadeSelect = Number(document.querySelector(`.js-select-quantity-${productId}`).value);
+  //const quantidadeSelect = Number(document.querySelector(`.js-select-quantity-${productId}`).value) || 1;
+  
+  let quantidadeSelect;
+  try {
+    quantidadeSelect = Number(document.querySelector(`.js-select-quantity-${productId}`).value);
+  } catch (error) {
+    quantidadeSelect = 1;
+  };
 
   //Se já existir o item, aumentar a sua quantidade, se não existir, adicionar o item novo ao carrinho
   if(matchingItem) {
@@ -58,6 +65,11 @@ export function removeFromCart(productId){
     }
   });
   cart = newCart;
+  saveCartToStorage();
+}
+
+export function cleanCart(){
+  cart = [];
   saveCartToStorage();
 }
 
@@ -115,6 +127,20 @@ export function totalCartQuantity() {
     cartQuantity += item.quantity;  
   });
   return cartQuantity;
+}
+
+//Mostrar carrinho HTML //Esta função poderia ser modificada para ser partilhada pelos vários scripts (armazenando a mesma no cart.js e exportando)
+export function showCartQuantity() {
+  let cartQuantity = 0;
+
+  cart.forEach((item) => {
+    cartQuantity += item.quantity;  
+  });
+  if(cartQuantity === 0){
+    document.querySelector('.js-cart-quantity').innerHTML = '';
+  } else {
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+  }
 }
 
 //Carregar o carrinho através do servidor de backend

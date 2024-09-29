@@ -1,11 +1,15 @@
 import { orders } from "../data/orders.js";
 import { getProduct, loadProductsFetch } from "../data/products.js";
+import { showCartQuantity, addToCart } from "../data/cart.js";
+import { moneyConverter } from "./utils/money.js";
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
 
 async function loadPage(){
   try {
 
     await loadProductsFetch().
     then(() => {
+      showCartQuantity();
       renderOrders();
     });
 
@@ -22,6 +26,8 @@ function renderOrders(){
 
     console.log(order);
 
+    const orderDateTime = dayjs(order.orderTime).format('dddd, MMMM D');
+
     //Gerar o HTML para apresentar as ordens
     ordersHTML += `
     <div class="order-container">
@@ -29,11 +35,11 @@ function renderOrders(){
         <div class="order-header-left-section">
           <div class="order-date">
             <div class="order-header-label">Order Placed:</div>
-            <div>${order.orderTime}</div>
+            <div>${orderDateTime}</div>
           </div>
           <div class="order-total">
             <div class="order-header-label">Total:</div>
-            <div>${order.totalCostCents}</div>
+            <div>${moneyConverter(order.totalCostCents)}$</div>
           </div>
         </div>
 
@@ -51,6 +57,17 @@ function renderOrders(){
 
   document.querySelector('.js-orders-grid-summary').innerHTML = ordersHTML;
 
+  //Adicionar EventListener a todos os botoes "Buy again" criados
+  const buyAgainButtons = document.querySelectorAll('.js-buy-again');
+
+  buyAgainButtons.forEach((buyButton) => {
+    buyButton.addEventListener('click', () => {
+
+      const productId = buyButton.dataset.productId;
+      addToCart(productId);
+      showCartQuantity();
+    });
+  });
 }
 
 function orderDetails(order){
@@ -61,6 +78,9 @@ function orderDetails(order){
   order.products.forEach((product) => {
 
     console.log(product);
+
+    const estimatedDeliveryTime = dayjs(product.estimatedDeliveryTime).format('dddd, MMMM D');
+
     const productId = product.productId;
 
     //Função (exportada) para saber qual o produto correto (para ter acesso aos dados do mesmo)
@@ -77,12 +97,12 @@ function orderDetails(order){
           ${matchingProduct.name}
         </div>
         <div class="product-delivery-date">
-          Arriving on: ${product.estimatedDeliveryTime}
+          Arriving on: ${estimatedDeliveryTime}
         </div>
         <div class="product-quantity">
-          ${product.quantity}
+          Quantity: ${product.quantity}
         </div>
-        <button class="buy-again-button button-primary">
+        <button class="buy-again-button button-primary js-buy-again" data-product-id="${matchingProduct.id}">
           <img class="buy-again-icon" src="images/icons/buy-again.png">
           <span class="buy-again-message">Buy it again</span>
         </button>
@@ -100,4 +120,7 @@ function orderDetails(order){
   return orderDetailsHTML;
 }
 
+
+
+//Carregar a página
 loadPage();

@@ -1,4 +1,4 @@
-import {cart, totalCartQuantity} from '../../data/cart.js';
+import {cart, totalCartQuantity, cleanCart} from '../../data/cart.js';
 import {getProduct} from '../../data/products.js';
 import {getDeliveryOption} from '../../data/deliveryOptions.js';
 import {moneyConverter} from '../utils/money.js';
@@ -80,6 +80,9 @@ export function renderPaymentSummary() {
     } catch (error){
       console.log("Erro :(");
     }
+
+    //Depois de fazer "Place Order" como já concluimos a compra, limpamos o carrinho e depois carregamos a página que tem o historico das ordens
+    cleanCart();
 
     window.location.href = 'orders.html'; //window.location.href devolve o url carregado no momento (neste caso modificamos para outro url)
   });

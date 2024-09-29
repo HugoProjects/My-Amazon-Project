@@ -133,3 +133,19 @@ export function loadCart(functionToRunAfterLoading) {
 
   xhr.send();
 }
+
+//O modo fetch usa promises sendo entao uma melhor pratica que o XMLHttpRequest com callbacks
+export async function loadCartFetch(){
+  const promise = fetch(
+    'https://supersimplebackend.dev/cart'
+  ).then((response) => {
+    return response.text();
+  }).then((cartData) => {
+    //cart = cartData; //Este carro é fake, neste caso ia ficar vazio com uma mensagem de texto
+    console.log(cartData);
+  }).catch((error) => { //Se acontecer um erro durante o fetch
+    console.log('Unexpected Error, try again later...');
+    //Opcionar: pode usar-se o parametro error para obter mais informaçoes sobre o erro que aconteceu
+  });
+  return promise;
+}

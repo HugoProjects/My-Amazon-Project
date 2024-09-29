@@ -2,7 +2,7 @@ import {renderOrderSummary} from './checkout/orderSummary.js';
 import {renderPaymentSummary} from './checkout/paymentSummary.js';
 // import '../data/backend-practice.js'; Corre este ficheiro/script automaticamente quando o ficheiro checkout.js corre
 import { loadProducts, loadProductsFetch } from '../data/products.js';
-import { loadCart } from '../data/cart.js';
+import { loadCart, loadCartFetch } from '../data/cart.js';
 
 //Esperar por várias promessas (uma de cada vez) para depois dar render
 /*
@@ -55,20 +55,31 @@ async function loadPage(){
 
     //throw 'exemplo de erro'; //Isto serve para criar um erro de proposito para o codigo saltar logo para o catch
 
-    await loadProductsFetch(); //await so funciona com promises (esta funcao retorna uma promise)
+    //await loadProductsFetch(); //await so funciona com promises (esta funcao retorna uma promise)
 
-    //Aqui passamos uma promise diretamente
+    /*Aqui passamos uma promise diretamente
     const value = await new Promise((resolve) => {
       loadCart(() => {
         resolve('Se quisermos passar algo pela variavel value');
       });
+    });*/
+
+    //await loadCartFetch();
+
+    await Promise.all([
+      loadProductsFetch(),
+      loadCartFetch()
+    ]).then(() => {
+      renderOrderSummary();
+      renderPaymentSummary();
     });
+
   } catch (error) {
     console.log('Unexpected Error, try again later...');
   }
   
-  renderOrderSummary();
-  renderPaymentSummary();
+  //renderOrderSummary();
+  //renderPaymentSummary();
 
   //return 'passar um valor pelo return'; //Opcional
 }

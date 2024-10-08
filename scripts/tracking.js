@@ -1,25 +1,21 @@
-import { orders, getOrder } from "../data/orders.js";
+import { getOrder } from "../data/orders.js";
 import { getProduct, loadProductsFetch } from "../data/products.js";
 import { showCartQuantity, addToCart } from "../data/cart.js";
-import { moneyConverter } from "./utils/money.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
 
-
 async function loadPage(){
-  //try {
+  try {
 
     await loadProductsFetch().
     then(() => {
       showCartQuantity();
       renderTracking();
     });
-/*
+
   } catch (error) {
     console.log('Unexpected Error, try again later...');
-  }*/
+  }
 }
-
-
 
 function renderTracking(){
 

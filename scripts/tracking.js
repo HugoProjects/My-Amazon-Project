@@ -2,12 +2,14 @@ import { getOrder } from "../data/orders.js";
 import { getProduct, loadProductsFetch } from "../data/products.js";
 import { showCartQuantity, addToCart } from "../data/cart.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //Importar Biblioteca externa //Não precisa dos {} porque a library só exporta uma função como default (export default dayjs)
+import { searchBarEventListener } from './utils/searchBar.js';
 
 async function loadPage(){
   try {
 
     await loadProductsFetch().
     then(() => {
+      searchBarEventListener();
       showCartQuantity();
       renderTracking();
     });

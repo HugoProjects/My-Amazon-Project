@@ -1,6 +1,7 @@
 import {cart, addToCart, showCartQuantity} from '../data/cart.js';
 import {products, loadProducts, loadProductsFetch} from '../data/products.js'
 import {moneyConverter} from './utils/money.js';
+import { searchBarEventListener } from './utils/searchBar.js';
 
 //loadProducts(renderProductsGrid); //Usar callbacks
 
@@ -15,6 +16,7 @@ loadPage();
 //Usar Promises mas com async e await
 async function loadPage(){
   await loadProductsFetch();
+  searchBarEventListener();
   renderProductsGrid();
 }
 
@@ -22,57 +24,84 @@ function renderProductsGrid(){
 
   let productsHTML = '';
 
+  /* Outra forma de trabalhar com o URL e com a Search Query
+  const url = new URL(window.location.href);
+  const search = url.searchParams.get('search');
+  */
+  const queryString = window.location.search; //Devolve a string depois do '?'
+  let search;
+
+  if(queryString){
+    console.log(queryString);
+
+    const urlParams = new URLSearchParams(queryString);
+    console.log(urlParams);
+
+    search = urlParams.get('search'); //This will return the first value associated with the given search parameter
+    console.log(search);
+
+    search = search.replaceAll('+', ' ');
+    console.log(search);
+
+  } else {
+    search = '';
+    console.log("nao passou parametro nenhum para pesquisar");
+  }
+
   products.forEach((product) => {
 
-    productsHTML += `
-            <div class="product-container">
-            <div class="product-image-container">
-              <img class="product-image"
-                src="${product.image}">
-            </div>
+    if(product.name.toLowerCase().includes(search) || search === ''){
 
-            <div class="product-name limit-text-to-2-lines">
-              ${product.name}
-            </div>
-
-            <div class="product-rating-container">
-              <img class="product-rating-stars"
-                src="images/ratings/rating-${product.rating.stars * 10}.png">
-              <div class="product-rating-count link-primary">
-                ${product.rating.count}
+      productsHTML += `
+              <div class="product-container">
+              <div class="product-image-container">
+                <img class="product-image"
+                  src="${product.image}">
               </div>
-            </div>
 
-            <div class="product-price">
-              $${moneyConverter(product.priceCents)}
-            </div>
+              <div class="product-name limit-text-to-2-lines">
+                ${product.name}
+              </div>
 
-            <div class="product-quantity-container">
-              <select class="js-select-quantity-${product.id}">
-                <option selected value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-            </div>
+              <div class="product-rating-container">
+                <img class="product-rating-stars"
+                  src="images/ratings/rating-${product.rating.stars * 10}.png">
+                <div class="product-rating-count link-primary">
+                  ${product.rating.count}
+                </div>
+              </div>
 
-            <div class="product-spacer"></div>
+              <div class="product-price">
+                $${moneyConverter(product.priceCents)}
+              </div>
 
-            <div class="added-to-cart js-added-to-cart-${product.id}">
-              <img src="images/icons/checkmark.png">
-              Added
-            </div>
+              <div class="product-quantity-container">
+                <select class="js-select-quantity-${product.id}">
+                  <option selected value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
 
-            <button class="add-to-cart-button button-primary js-add-to-cart-button" data-product-id="${product.id}">
-              Add to Cart
-            </button>
-          </div>`
+              <div class="product-spacer"></div>
+
+              <div class="added-to-cart js-added-to-cart-${product.id}">
+                <img src="images/icons/checkmark.png">
+                Added
+              </div>
+
+              <button class="add-to-cart-button button-primary js-add-to-cart-button" data-product-id="${product.id}">
+                Add to Cart
+              </button>
+            </div>`;
+    }
   });
 
   //Apresentar o código gerado na página (na div criada para o efeito)

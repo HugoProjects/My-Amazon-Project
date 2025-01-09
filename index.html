@@ -46,6 +46,8 @@
         }
     </style>
     <script>
+    //Esperar que o DOM seja todo carregado antes de correr o script
+    document.addEventListener('DOMContentLoaded', () => {
         // Define o tempo inicial
         let countdownTime = 10;
 
@@ -56,14 +58,14 @@
           countdownTime--;
           countdownElement.textContent = countdownTime; //Atualizar o elemento no DOM
 
-        // Redireciona quando o contador chega a 0
+          // Redireciona quando o contador chega a 0
           if (countdownTime <= 0) {
             clearInterval(interval);
             window.location.href = "https://hugoprojects.github.io/My-Amazon-Project/amazon.html"; // redirecionar para outro site
           }
         }, 1000);
-
-    </script>
+    });
+</script>
 </head>
 <body>
     <div class="welcome-container">

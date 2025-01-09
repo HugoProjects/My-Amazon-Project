@@ -46,14 +46,23 @@
         }
     </style>
     <script>
-        // Função para redirecionar para outro site
-        function redirect() {
-            window.location.href = "https://hugoprojects.github.io/My-Amazon-Project/amazon.html";
-        }
+        // Define o tempo inicial
+        let countdownTime = 10;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            setTimeout(redirect, 10000); // Redireciona após 10 segundos
-        });
+        // Atualiza o contador a cada segundo
+        const countdownElement = document.querySelector('.countdown');
+        
+        const interval = setInterval(() => {
+          countdownTime--;
+          countdownElement.textContent = countdownTime; //Atualizar o elemento no DOM
+
+        // Redireciona quando o contador chega a 0
+          if (countdownTime <= 0) {
+            clearInterval(interval);
+            window.location.href = "https://hugoprojects.github.io/My-Amazon-Project/amazon.html"; // redirecionar para outro site
+          }
+        }, 1000);
+
     </script>
 </head>
 <body>
@@ -63,7 +72,7 @@
             <br>
             Project made by Hugo Bastos in a learning course by Simon Bao using HTML, CSS, JavaScript.</p>
         <p class="redirect-info">
-            You will be redirected in 10 seconds. If it does not happen <a href="https://hugoprojects.github.io/My-Amazon-Project/amazon.html" onclick="redirect()">click here</a>.
+            You will be redirected in <span class="countdown">10</span> seconds. If it does not happen <a href="https://hugoprojects.github.io/My-Amazon-Project/amazon.html" onclick="redirect()">click here</a>.
         </p>
     </div>
 </body>
